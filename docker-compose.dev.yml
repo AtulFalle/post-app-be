@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: .devcontainer/Dockerfile
     volumes:
-      - ../:/workspace:cached
+      - ./:/workspace:cached
     command: sleep infinity
     networks:
       - dev-network
