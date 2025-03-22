@@ -79,6 +79,50 @@ services:
       - "3005:3000"
     networks:
       - dev-network
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+    networks:
+      - dev-network
+    depends_on:
+      - post-service
+      - consul
+
+  post-service:
+    build:
+      context: ./post-service
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=development
+      - CONSUL_HOST=consul
+      - CONSUL_PORT=8500
+    networks:
+      - dev-network
+    depends_on:
+      - redis
+      - mongo1
+      - mongo2
+      - mongo3
+      - consul
+  consul:
+    image: consul:1.14.0  # Specify a specific version
+    container_name: consul
+    ports:
+      - "8500:8500"  # Expose port 8500 for the UI
+    environment:
+      CONSUL_BIND_INTERFACE: eth0
+    command: "consul agent -dev -client=0.0.0.0 -bind=0.0.0.0"
+    networks:
+      - dev-network
 
 volumes:
   mongo1_data:

@@ -6,6 +6,8 @@ import { PostModule } from './post/post.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-store';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ConsulModule } from './consule/consule.module';
 
 @Module({
   imports: [
@@ -23,8 +25,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         ttl: 60 * 60, // Cache for 1 hour
       }),
     }),
-    PostModule
-
+    PostModule,
+    ConsulModule
   ],
   controllers: [AppController],
   providers: [AppService],

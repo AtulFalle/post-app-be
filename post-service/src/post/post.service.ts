@@ -1,21 +1,25 @@
-import { Injectable, NotFoundException, Inject } from '@nestjs/common';
+import { Injectable, NotFoundException, Inject, OnModuleInit } from '@nestjs/common';
 
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Post } from './post.schema';
 import { Cache } from 'cache-manager';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import Consul from 'consul';
 
 /**
  * Service responsible for managing blog posts with Redis caching.
  */
 @Injectable()
 export class PostService {
+  consul: any;
   constructor(
     @InjectModel(Post.name) private postModel: Model<Post>,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache, 
-  ) { }
+    
+  ) {}
 
+ 
   /**
    * Creates a new post and clears the cache.
    * @param {string} title - The title of the post.
