@@ -1,0 +1,88 @@
+version: "3.8"
+
+services:
+  postapp-dev-container:
+    container_name: postapp-dev-container
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ../:/workspace:cached
+    command: sleep infinity
+    networks:
+      - dev-network
+
+  mongo1:
+    image: mongo:6
+    container_name: mongo1
+    restart: always
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo1_data:/data/db
+    networks:
+      - dev-network
+
+  mongo2:
+    image: mongo:6
+    container_name: mongo2
+    restart: always
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    networks:
+      - dev-network
+
+  mongo3:
+    image: mongo:6
+    container_name: mongo3
+    restart: always
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    networks:
+      - dev-network
+
+  mongo-setup:
+    image: mongo:6
+    container_name: mongo-setup
+    depends_on:
+      - mongo1
+      - mongo2
+      - mongo3
+    volumes:
+      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
+    entrypoint: [ "bash", "/docker-entrypoint-initdb.d/mongo-init.sh" ]
+    networks:
+      - dev-network
+
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - dev-network
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - dev-network
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3005:3000"
+    networks:
+      - dev-network
+
+volumes:
+  mongo1_data:
+
+networks:
+  dev-network:
+    driver: bridge

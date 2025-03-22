@@ -1,0 +1,22 @@
+{
+    "name": "PostApp Microservices",
+    "dockerComposeFile": "../docker-compose.dev.yml",
+    "service": "dev-container",
+    "workspaceFolder": "/workspace",
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "dbaeumer.vscode-eslint",
+          "esbenp.prettier-vscode",
+          "mongodb.mongodb-vscode",
+          "redhat.vscode-yaml"
+        ],
+        "settings": {
+          "terminal.integrated.defaultProfile.linux": "bash",
+          "editor.formatOnSave": true
+        }
+      }
+    },
+    "remoteUser": "node"
+  }
+  
