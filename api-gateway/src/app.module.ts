@@ -1,11 +1,10 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { ThrottlerModule } from '@nestjs/throttler';
-import Consul from 'consul';
-import { HttpService } from '@nestjs/axios';
 import { ConsulModule } from './consule/consule.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -15,14 +14,27 @@ import { ConsulModule } from './consule/consule.module';
         transport: Transport.TCP,
         options: {
           host: 'post-service',
-          port: 3003,
+          port: 4000,
         },
       },
     ]),
-    ConsulModule
-    
+    ConsulModule,
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          ttl: 3000,
+          limit: 10,
+        },
+      ],
+    }),
+
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, 
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard
+    }
+  ],
 })
-export class AppModule {}
+export class AppModule { }

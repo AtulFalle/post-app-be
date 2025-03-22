@@ -101,10 +101,16 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3002:3002"
+      - "4000:4000"
     environment:
       - NODE_ENV=development
       - CONSUL_HOST=consul
       - CONSUL_PORT=8500
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     networks:
       - dev-network
     depends_on:

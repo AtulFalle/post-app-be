@@ -14,6 +14,14 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
-  await app.listen(process.env.PORT ?? 3003);
+  await app.listen(process.env.PORT ?? 3002);
+
+   // Attach the TCP microservice to the same instance (Avoids multiple processes)
+   app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.TCP,
+    options: { host: '0.0.0.0', port: 4000 }, // Use a different port for TCP
+  });
+
+  await app.startAllMicroservices();
 }
 bootstrap();

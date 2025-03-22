@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Body, Param, Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 
 @Controller('posts')
@@ -8,20 +9,40 @@ export class AppController {
   constructor(@Inject('POST_SERVICE') private readonly postService: ClientProxy) { }
 
 
-  @Throttle({ "limit": {limit: 5,ttl: 60 } })
+  /**
+ * @swagger
+ * /posts:
+ *   post:
+ *     summary: Create a new post
+ *     description: Adds a new post to the database
+ */
   @Post()
-  createPost(@Body() postData: { title: string; description: string }) {
-    return this.postService.send('createPost', postData);
+  @ApiOperation({ summary: 'Create a new post', description: 'Adds a new post to the database' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        title: { type: 'string', example: 'My First Post' },
+        description: { type: 'string', example: 'This is a test description' },
+      },
+    },
+  })
+  @ApiResponse({ status: 201, description: 'Post created successfully' })
+  createPost(@Body() body: { title: string; description: string }) {
+    console.log('Sending request to Post Service for body:', JSON.stringify(body));
+    return this.postService.send({ cmd: 'create_post' }, body);
   }
 
-  @Throttle({ "limit": {limit: 5,ttl: 60 } })
+  @Throttle({ "limit": { limit: 5, ttl: 60 } })
   @Get()
   getAllPosts() {
-    return this.postService.send('getAllPosts', {});
+    return this.postService.send({cmd: 'get_all_post'}, {});
   }
 
   @Get(':id')
+  @Throttle({ default: { limit: 2, ttl: 50 } })
   getPostById(@Param('id') id: string) {
-    return this.postService.send('getPostById', id);
+    console.log('Sending request to GET POST Service for ID:', id);
+    return this.postService.send({ cmd: 'get_post_by_id' }, { id });
   }
 }

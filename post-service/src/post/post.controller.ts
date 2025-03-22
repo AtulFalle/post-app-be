@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
 import { PostService } from './post.service';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 /**
  * @swagger
@@ -63,9 +64,26 @@ export class PostController {
     @ApiResponse({ status: 200, description: 'Post found' })
     @ApiResponse({ status: 404, description: 'Post not found' })
     async findById(@Param('id') id: string) {
+        console.log('Received HTTP request for post ID:', id);
         return this.postService.findById(id);
     }
 
+    @MessagePattern({ cmd: 'get_post_by_id' })
+    async findByIdTCP(@Payload('id') data: any) {
+        console.log('Received TCP request for GET ID:', JSON.stringify(data));
+        return this.postService.findById(data);
+    }
+
+    @MessagePattern( { cmd: 'create_post' })
+    async createPostTCP(@Payload() data: any) {
+        console.log('Received TCP request for post ID:', JSON.stringify(data));
+        return this.postService.create(data.title, data.description);
+    }
+
+    @MessagePattern( { cmd: 'get_all_post' })
+    async findAllTCP() {
+        return this.postService.findAll();
+    }
     /**
      * @swagger
      * /posts/{id}:

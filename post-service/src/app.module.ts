@@ -6,8 +6,8 @@ import { PostModule } from './post/post.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-store';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConsulModule } from './consule/consule.module';
+import { HealthController } from './health.controller';
 
 @Module({
   imports: [
@@ -28,7 +28,7 @@ import { ConsulModule } from './consule/consule.module';
     PostModule,
     ConsulModule
   ],
-  controllers: [AppController],
+  controllers: [AppController, HealthController],
   providers: [AppService],
   exports: [CacheModule]
 })
