@@ -1,0 +1,54 @@
+# Node.js dependencies
+api-gateway/node_modules/
+post-service/node_modules/
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+lerna-debug.log*
+.pnpm-debug.log*
+coverage/
+*.lcov
+
+# NestJS build outputs
+dist/
+.cache/
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env*.local
+
+# VSCode settings
+.vscode/
+.history/
+.idea/
+*.swp
+
+# Docker
+docker-compose.override.yml
+docker-compose.dev.yml
+.docker/
+.dockerignore
+
+# MacOS & Linux system files
+.DS_Store
+Thumbs.db
+
+# Debugging
+*.log
+*.pid
+*.seed
+*.pid.lock
