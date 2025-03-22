@@ -48,7 +48,7 @@ export class PostService {
     const posts = await this.postModel.find().exec();
 
     // Store in cache for future requests (TTL: 60 sec)
-    await this.cacheManager.set('posts', posts, 60);
+    await this.cacheManager.set('posts', posts, 3660);
 
     return posts;
   }
