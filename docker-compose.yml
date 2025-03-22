@@ -60,35 +60,8 @@ services:
     ports:
       - "6379:6379"
     command: [ "redis-server", "--appendonly", "yes" ]
-    volumes:
-      - redis_data:/data
     networks:
       - dev-network
-
-  post-service:
-    build: .
-    container_name: post-service
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-    command: [ "npm", "start" ]
-    depends_on:
-      - redis
-    networks:
-      - dev-network
-  redis-commander:
-    image: rediscommander/redis-commander:latest
-    container_name: redis-commander
-    restart: always
-    environment:
-      - REDIS_HOSTS=local:redis:6379
-    ports:
-      - "8081:8081"
-    depends_on:
-      - redis
-    networks:
-      - dev-network
-
   prometheus:
     image: prom/prometheus
     container_name: prometheus
@@ -109,8 +82,6 @@ services:
 
 volumes:
   mongo1_data:
-  redis_data:
-
 
 networks:
   dev-network:
