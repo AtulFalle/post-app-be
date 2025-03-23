@@ -29,7 +29,7 @@ export class ConsulService implements OnModuleInit, OnModuleDestroy, OnApplicati
       name: 'post-service', // Common name for all replicas
       id: this.serviceId, // Unique ID per instance
       address: this.hostname, // Use dynamic hostname
-      port: 4001, // Internal port
+      port: 4000, // Internal port
       check: {
         http: `http://${this.hostname}:3002/health`, // Health check per instance
         interval: '10s',
