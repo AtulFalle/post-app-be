@@ -80,6 +80,7 @@ services:
     networks:
       - dev-network
   api-gateway:
+    container_name: api-gateway
     build:
       context: ./api-gateway
       dockerfile: Dockerfile
@@ -92,25 +93,25 @@ services:
     networks:
       - dev-network
     depends_on:
-      - post-service
-      - consul
+      post-service:
+        condition: service_healthy
 
   post-service:
     build:
       context: ./post-service
       dockerfile: Dockerfile
     ports:
-      - "3002:3002"
-      - "4000:4000"
+      - "3002"
+      - "4000"
     environment:
       - NODE_ENV=development
       - CONSUL_HOST=consul
       - CONSUL_PORT=8500
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ["CMD", "curl", "-f", "http://post-service:3002/health"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
     networks:
       - dev-network
     depends_on:
@@ -119,6 +120,9 @@ services:
       - mongo2
       - mongo3
       - consul
+    deploy:
+      replicas: 3 # Run 3 instances of Post Service
+    restart: always
   consul:
     image: consul:1.14.0  # Specify a specific version
     container_name: consul

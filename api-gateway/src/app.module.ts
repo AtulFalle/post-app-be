@@ -5,6 +5,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConsulModule } from './consule/consule.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { TcpClientService } from './tcp-client.service';
 
 @Module({
   imports: [
@@ -30,7 +31,7 @@ import { APP_GUARD } from '@nestjs/core';
 
   ],
   controllers: [AppController],
-  providers: [AppService, 
+  providers: [AppService, TcpClientService,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard
