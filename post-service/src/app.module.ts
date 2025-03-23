@@ -8,9 +8,11 @@ import { redisStore } from 'cache-manager-redis-store';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ConsulModule } from './consule/consule.module';
 import { HealthController } from './health.controller';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
 @Module({
   imports: [
+    PrometheusModule.register(),
     MongooseModule.forRoot('mongodb://mongo1,mongo2,mongo3/postdb', {
       replicaSet: 'rs0',
     }),

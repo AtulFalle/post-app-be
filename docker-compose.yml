@@ -92,6 +92,8 @@ services:
       - CONSUL_PORT=8500
     networks:
       - dev-network
+    env_file:
+      - ./api-gateway/.env
     depends_on:
       post-service:
         condition: service_healthy
@@ -131,6 +133,30 @@ services:
     environment:
       CONSUL_BIND_INTERFACE: eth0
     command: "consul agent -dev -client=0.0.0.0 -bind=0.0.0.0"
+    networks:
+      - dev-network
+  frontend:
+    build: 
+      context: ../post-app-ui
+      dockerfile: Dockerfile
+    ports:
+      - "4201:80"
+    depends_on:
+      - api-gateway
+    networks:
+      - dev-network
+  auth-service:
+    build: 
+      context: ./auth-service
+      dockerfile: Dockerfile
+    container_name: auth-service
+    ports:
+      - "3003:3003"
+      - "3004:3004"
+    env_file:
+      - ./auth-service/.env
+    depends_on:
+      - mongo1
     networks:
       - dev-network
 

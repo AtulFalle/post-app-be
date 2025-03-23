@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Param, Inject } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Inject, UseGuards } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
-import { ConsulService } from './consule/consule.service';
 import { TcpClientService } from './tcp-client.service';
+import { AuthGuard } from './guard/auth.guard';
 
 @Controller('posts')
 export class AppController {
@@ -41,6 +41,8 @@ export class AppController {
 
   @Throttle({ "limit": { limit: 5, ttl: 60 } })
   @Get()
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   getAllPosts() {
     return this.tcpClientService.send({ cmd: 'get_all_post' }, {});
   }

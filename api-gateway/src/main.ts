@@ -13,12 +13,18 @@ async function bootstrap() {
       max: 100, // Limit each IP to 100 requests per windowMs
     }),
   );
+  app.enableCors({
+    origin: '*', // Allow all origins (for development)
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type, Authorization',
+  })
 
   // Swagger Setup
   const config = new DocumentBuilder()
     .setTitle('Post App API Gateway')
     .setDescription('API Gateway for Microservices')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
