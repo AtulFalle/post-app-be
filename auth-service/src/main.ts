@@ -15,6 +15,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
+  app.enableCors()
   await app.listen(process.env.PORT ?? 3003);
 
   // Attach the TCP microservice to the same instance (Avoids multiple processes)
