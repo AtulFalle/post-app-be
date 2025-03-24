@@ -11,16 +11,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    ClientsModule.register([
-      {
-        name: 'POST_SERVICE',
-        transport: Transport.TCP,
-        options: {
-          host: 'post-service',
-          port: 4000,
-        },
-      },
-    ]),
     ConsulModule,
     ThrottlerModule.forRoot({
       throttlers: [

@@ -1,5 +1,5 @@
 global:
-  scrape_interval: 15s  # Fetch metrics every 15 seconds
+  scrape_interval: 2s  # Fetch metrics every 15 seconds
 
 scrape_configs:
   - job_name: 'post-service'

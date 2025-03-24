@@ -140,7 +140,7 @@ services:
       context: ../post-app-ui
       dockerfile: Dockerfile
     ports:
-      - "4201:80"
+      - "4200:80"
     depends_on:
       - api-gateway
     networks:
@@ -157,6 +157,7 @@ services:
       - ./auth-service/.env
     depends_on:
       - mongo1
+      - consul
     networks:
       - dev-network
 

@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:20-alpine
 
 # Step 2: Set the working directory
 WORKDIR /app
@@ -8,12 +8,14 @@ RUN npm install -g @nestjs/cli
 
 # Step 4: Copy package.json and package-lock.json (or yarn.lock) to install dependencies
 COPY package*.json ./
+COPY .env .env
 
 # Step 5: Install project dependencies
 RUN npm install --force
 
 # Step 6: Copy the rest of the application code
 COPY . .
+
 
 # Step 7: Build the app
 RUN npm run build

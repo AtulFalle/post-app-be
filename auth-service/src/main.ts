@@ -1,10 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { AuthModule } from './auth/auth.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as dotenv from 'dotenv';
 
 async function bootstrap() {
+  dotenv.config();
   const app = await NestFactory.create(AppModule);
   const config = new DocumentBuilder()
     .setTitle('Post Service API')

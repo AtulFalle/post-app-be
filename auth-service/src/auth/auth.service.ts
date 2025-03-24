@@ -2,7 +2,6 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import axios from 'axios';
-import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
@@ -43,8 +42,10 @@ export class AuthService {
     if (!data.id_token) {
       throw new UnauthorizedException('Invalid token');
     }
+    console.log('JWT secret = ',this.configService.get('JWT_SECRET'))
 
-    const jwtToken = jwt.sign({ sub: data.id_token }, this.configService.get('JWT_SECRET'), { expiresIn: '1h' });
+    // const jwtToken = jwt.sign({ sub: data.id_token }, this.configService.get<string>('JWT_SECRET'), { expiresIn: '1h' });
+    const jwtToken = this.generateToken({ sub: data.id_token });
 
     return { access_token: jwtToken };
   }

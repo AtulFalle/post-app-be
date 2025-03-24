@@ -14,4 +14,11 @@ export class TcpClientService {
     const client = await this.loadBalancer.getTcpClient('post-service');
     return client.send(pattern, data);
   }
+
+  async sendAuthReq(pattern: object, data: any) {
+
+    const client = await this.loadBalancer.getTcpClient('auth-service');
+    return client.send(pattern, data);
+  }
+
 }

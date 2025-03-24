@@ -11,7 +11,7 @@ export class ConsulService implements OnModuleInit, OnModuleDestroy, OnApplicati
 
   constructor() {
     this.consul = new Consul({
-      host: process.env.CONSUL_HOST || 'consule', // ✅ Use the correct hostname
+      host: process.env.CONSUL_HOST || 'consul', // ✅ Use the correct hostname
       port: process.env.CONSUL_PORT || 8500,
       promisify: true,
     });

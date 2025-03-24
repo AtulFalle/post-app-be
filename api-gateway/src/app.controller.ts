@@ -1,19 +1,16 @@
 import { Controller, Get, Post, Body, Param, Inject, UseGuards } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { TcpClientService } from './tcp-client.service';
 import { AuthGuard } from './guard/auth.guard';
 
-@Controller('posts')
+@Controller()
 export class AppController {
-  client: any;
-  constructor(@Inject('POST_SERVICE') private readonly postService: ClientProxy,
+  constructor(
   private readonly tcpClientService: TcpClientService
 ) {
 
   }
-
 
   /**
  * @swagger
@@ -22,7 +19,9 @@ export class AppController {
  *     summary: Create a new post
  *     description: Adds a new post to the database
  */
-  @Post()
+  @Throttle({ "limit": { limit: 5, ttl: 60 } })
+  @Post('posts')
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Create a new post', description: 'Adds a new post to the database' })
   @ApiBody({
     schema: {
@@ -40,17 +39,25 @@ export class AppController {
   }
 
   @Throttle({ "limit": { limit: 5, ttl: 60 } })
-  @Get()
+  @Get('posts')
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
   getAllPosts() {
     return this.tcpClientService.send({ cmd: 'get_all_post' }, {});
   }
 
-  @Get(':id')
+  @Get('posts/:id')
   @Throttle({ default: { limit: 2, ttl: 50 } })
   getPostById(@Param('id') id: string) {
     console.log('Sending request to GET POST Service for ID:', id);
     return this.tcpClientService.send({ cmd: 'get_post_by_id' }, { id });
   }
+
+  // get_auth_token
+  @Post('auth/google')
+  @Throttle({ default: { limit: 2, ttl: 50 } })
+  async googleLogin(@Body('code') code: string) {
+    return this.tcpClientService.sendAuthReq({ cmd: 'get_auth_token' }, { code });
+  }
+
 }

@@ -7,7 +7,7 @@ import { ConsulModule } from './consule/consule.module';
 import { HealthController } from './health.controller';
 
 @Module({
-  imports: [AuthModule, ConfigModule.forRoot({isGlobal: true}), ConsulModule],
+  imports: [ConfigModule.forRoot({isGlobal: true}), ConsulModule, AuthModule],
   controllers: [AppController, HealthController],
   providers: [AppService],
 })

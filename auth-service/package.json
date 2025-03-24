@@ -30,6 +30,7 @@
     "@nestjs/swagger": "^11.0.7",
     "axios": "^1.8.4",
     "consul": "^2.0.1",
+    "dotenv": "^16.4.7",
     "jsonwebtoken": "^9.0.2",
     "passport": "^0.7.0",
     "passport-facebook": "^3.0.0",
