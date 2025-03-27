@@ -1,102 +1,127 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Post-App Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This repository contains the backend services for the Post-App application, designed with a microservices architecture. It leverages Docker Compose for orchestration and includes services for authentication, post management, an API gateway, and database management using MongoDB and PostgreSQL.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Table of Contents
 
-## Description
+- [Architecture Overview](#architecture-overview)
+- [Services](#services)
+  - [API Gateway](#api-gateway)
+  - [Auth Service](#auth-service)
+  - [Post Service](#post-service)
+- [Databases](#databases)
+  - [MongoDB](#mongodb)
+  - [PostgreSQL](#postgresql)
+- [Configuration Files](#configuration-files)
+  - [Docker Compose](#docker-compose)
+  - [MongoDB Initialization](#mongodb-initialization)
+  - [PostgreSQL Configuration](#postgresql-configuration)
+  - [Prometheus Configuration](#prometheus-configuration)
+  - [Redis Configuration](#redis-configuration)
+- [Development Environment](#development-environment)
+- [Running the Application](#running-the-application)
+- [Monitoring](#monitoring)
+- [Database Management](#database-management)
+- [Contributing](#contributing)
+- [License](#license)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
 
-## Project setup
+## Architecture Overview
 
-```bash
-$ pnpm install
-```
+The backend is structured into multiple services to promote scalability and maintainability:
 
-## Compile and run the project
+- **API Gateway**: Manages incoming requests and routes them to the appropriate services.
+- **Auth Service**: Handles user authentication and authorization.
+- **Post Service**: Manages operations related to posts.
+- **MongoDB**: NoSQL database for storing application data.
+- **PostgreSQL**: SQL database for relational data storage.
+- **Redis**: In-memory caching and message brokering.
+- **Prometheus & Grafana**: Monitoring and analytics.
 
-```bash
-# development
-$ pnpm run start
+These services communicate asynchronously, ensuring a decoupled and resilient system.
 
-# watch mode
-$ pnpm run start:dev
+---
 
-# production mode
-$ pnpm run start:prod
-```
+## Services
 
-## Run tests
+### API Gateway
 
-```bash
-# unit tests
-$ pnpm run test
+Located in the `api-gateway` directory, this service serves as the entry point for clients. It routes requests to the appropriate backend services and handles concerns such as load balancing and rate limiting.
 
-# e2e tests
-$ pnpm run test:e2e
+### Auth Service
 
-# test coverage
-$ pnpm run test:cov
-```
+Found in the `auth-service` directory, this service is responsible for user authentication and authorization. It manages user credentials and issues tokens for session management.
 
-## Deployment
+### Post Service
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Situated in the `post-service` directory, this service handles all operations related to posts, including creation, retrieval, updating, and deletion.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+---
 
-```bash
-$ pnpm install -g mau
-$ mau deploy
-```
+## Databases
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### MongoDB
 
-## Resources
+- Used for storing unstructured and semi-structured data.
+- Defined in `docker-compose.yml` as the `mongodb` service.
+- The `mongo-init.sh` script initializes the database with required configurations.
 
-Check out a few resources that may come in handy when working with NestJS:
+### PostgreSQL
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+- Used for storing relational data.
+- Defined in `docker-compose.yml` as the `postgres` service.
+- **pgAdmin** is included for managing PostgreSQL databases via a web interface.
 
-## Support
+---
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Configuration Files
 
-## Stay in touch
+### Docker Compose
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+The `docker-compose.yml` file orchestrates the various services and dependencies:
 
-## License
+- **Services**:
+  - `api-gateway`
+  - `auth-service`
+  - `post-service`
+  - `mongodb`: NoSQL database.
+  - `postgres`: Relational database.
+  - `redis`: In-memory caching and pub/sub.
+  - `pgadmin`: Web-based UI for managing PostgreSQL.
+  - `prometheus`: Monitoring system.
+  - `grafana`: Dashboard visualization.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### MongoDB Initialization
 
+The `mongo-init.sh` script initializes the MongoDB instance with necessary configurations and seed data.
 
-Graphana dashboard id: 11159
+### PostgreSQL Configuration
+
+- Environment variables for the database (username, password, database name) are set in `docker-compose.yml`.
+- pgAdmin allows database administration via a web UI, accessible at `http://localhost:5050`.
+
+### Prometheus Configuration
+
+The `prometheus.yml` file contains the configuration for Prometheus, specifying scrape intervals and targets for monitoring the services.
+
+### Redis Configuration
+
+The `redis.conf` file provides custom configurations for the Redis service to optimize performance and persistence settings.
+
+---
+
+## Development Environment
+
+A `.devcontainer` directory is present, indicating support for development within a containerized environment, ensuring consistency across development setups.
+
+---
+
+## Running the Application
+
+To run the application locally:
+
+1. Ensure Docker and Docker Compose are installed on your system.
+2. Clone the repository:
+   ```sh
+   git clone https://github.com/AtulFalle/post-app-be.git

@@ -8,6 +8,9 @@ export class Post extends Document {
 
   @Prop({ required: true })
   description: string;
+
+  @Prop({required: true})
+  createdBy: string;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

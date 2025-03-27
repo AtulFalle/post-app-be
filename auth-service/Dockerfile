@@ -20,6 +20,9 @@ COPY . .
 # Step 7: Build the app
 RUN npm run build
 
+RUN npm run prisma:generate
+
+
 # Step 8: Expose the port that the app will run on
 EXPOSE 3003
 EXPOSE 3004

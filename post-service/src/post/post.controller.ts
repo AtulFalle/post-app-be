@@ -14,28 +14,6 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 export class PostController {
     constructor(private readonly postService: PostService) { }
 
-    /**
-     * @swagger
-     * /posts:
-     *   post:
-     *     summary: Create a new post
-     *     description: Adds a new post to the database
-     */
-    @Post()
-    @ApiOperation({ summary: 'Create a new post', description: 'Adds a new post to the database' })
-    @ApiBody({
-        schema: {
-            type: 'object',
-            properties: {
-                title: { type: 'string', example: 'My First Post' },
-                description: { type: 'string', example: 'This is a test description' },
-            },
-        },
-    })
-    @ApiResponse({ status: 201, description: 'Post created successfully' })
-    async create(@Body() body: { title: string; description: string }) {
-        return this.postService.create(body.title, body.description);
-    }
 
     /**
      * @swagger
@@ -77,37 +55,21 @@ export class PostController {
     @MessagePattern( { cmd: 'create_post' })
     async createPostTCP(@Payload() data: any) {
         console.log('Received TCP request for post ID:', JSON.stringify(data));
-        return this.postService.create(data.title, data.description);
+        return this.postService.create(data.title, data.description, data.id);
     }
 
     @MessagePattern( { cmd: 'get_all_post' })
     async findAllTCP() {
         return this.postService.findAll();
     }
-    /**
-     * @swagger
-     * /posts/{id}:
-     *   put:
-     *     summary: Update a post
-     *     description: Updates an existing post by its ID
-     */
-    @Put(':id')
-    @ApiOperation({ summary: 'Update a post', description: 'Updates an existing post' })
-    @ApiParam({ name: 'id', required: true, description: 'Post ID', example: '65e1234abcd56789efgh' })
-    @ApiBody({
-        schema: {
-            type: 'object',
-            properties: {
-                title: { type: 'string', example: 'Updated Title' },
-                description: { type: 'string', example: 'Updated Description' },
-            },
-        },
-    })
-    @ApiResponse({ status: 200, description: 'Post updated successfully' })
-    @ApiResponse({ status: 404, description: 'Post not found' })
-    async update(@Param('id') id: string, @Body() body: { title: string; description: string }) {
-        return this.postService.update(id, body.title, body.description);
+
+    @MessagePattern( { cmd: 'update_post' })
+    async updatePostTCP(@Payload() data: any) {
+        console.log('Received TCP request for update post:', JSON.stringify(data));
+        let val = data.data;
+        return this.postService.update(val.id,val.title, val.description);
     }
+ 
 
     /**
      * @swagger

@@ -158,11 +158,40 @@ services:
     depends_on:
       - mongo1
       - consul
+      - postgres
+    networks:
+      - dev-network
+  postgres:
+    image: postgres:16
+    container_name: auth_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: auth_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - dev-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
     networks:
       - dev-network
 
 volumes:
   mongo1_data:
+  postgres_data:
 
 networks:
   dev-network:
