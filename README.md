@@ -28,6 +28,8 @@ This repository contains the backend services for the Post-App application, desi
 ---
 
 ## Architecture Overview
+![image](https://github.com/user-attachments/assets/add7a7bb-0bd8-43fe-8ac5-89a0958d9c7a)
+
 
 The backend is structured into multiple services to promote scalability and maintainability:
 
