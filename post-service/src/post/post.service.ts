@@ -27,8 +27,7 @@ export class PostService {
    * @returns {Promise<Post>} - The created post document.
    */
   async create(title: string, description: string, id: string): Promise<Post> {
-    const newPost = new this.postModel({ title, description, createdBy: id });
-    const savedPost = await newPost.save();
+    const savedPost = await this.postModel.create({ title, description, createdBy: id });
 
     // Clear cache when a new post is created
     await this.cacheManager.del('posts');
